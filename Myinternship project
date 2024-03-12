@@ -1,0 +1,88 @@
+                                                                                       Project Title: Python Quiz Game
+Objective:
+The objective of this project is to create a quiz game using Python. The quiz game will present the user with a series of questions and multiple-choice answers.
+The user will select an answer for each question, and the program will provide feedback on whether the answer is correct or incorrect. At the end of the quiz, the
+program will display the user's score.
+
+Code:
+
+import random
+
+class QuizGame:
+    def _init_(self, questions):
+        self.questions = questions
+        self.current_question_index = 0
+        self.score = 0
+
+    def play(self):
+        while self.more_questions():
+            self.ask_question()
+        self.display_final_score()
+
+    def ask_question(self):
+        question = self.current_question()
+        print(f"\nQuestion {self.current_question_index + 1}: {question['text']}")
+        for i, option in enumerate(question['options']):
+            print(f"{i + 1}. {option}")
+        user_answer = self.get_user_answer(len(question['options']))
+        self.check_answer(user_answer)
+        self.current_question_index += 1
+
+    def current_question(self):
+        return self.questions[self.current_question_index]
+
+    def more_questions(self):
+        return self.current_question_index < len(self.questions)
+
+    def get_user_answer(self, num_options):
+        while True:
+            try:
+                user_answer = int(input("Enter your answer: "))
+                if 1 <= user_answer <= num_options:
+                    return user_answer - 1
+                else:
+                    print("Invalid answer. Please enter a number between 1 and", num_options)
+            except ValueError:
+                print("Invalid answer. Please enter a number between 1 and", num_options)
+
+    def check_answer(self, user_answer):
+        correct_answer = self.current_question()['correct']
+        if user_answer == correct_answer:
+            print("Correct!")
+            self.score += 1
+            print(f"Your current score is: {self.score}/{self.current_question_index + 1}")
+        else:
+            print("Incorrect.")
+            print(f"The correct answer is: {self.current_question()['options'][correct_answer]}")
+            print(f"Your current score is: {self.score}/{self.current_question_index + 1}")
+
+    def display_final_score(self):
+        print("\nFinal Score:")
+        print(f"Your final score is: {self.score}/{len(self.questions)}")
+
+def main():
+    questions = [
+        {
+            'text': "What is the capital of France?",
+            'options': ["Paris", "Berlin", "Madrid", "Rome"],
+            'correct': 0
+        },
+        {
+            'text': "Which planet is closest to the Sun?",
+            'options': ["Mercury", "Venus", "Earth", "Mars"],
+            'correct': 1
+        },
+        {
+            'text': "Which is the largest ocean?",
+            'options': ["Pacific Ocean", "Atlantic Ocean", "Indian Ocean", "Southern Ocean"],
+            'correct': 0
+        }
+    ]
+    random.shuffle(questions)
+    game = QuizGame(questions)
+    game.play()
+if _name_ == "_main_":
+    main()
+Conclusion:
+The Python quiz game project aims to provide an interactive and educational experience for users to test their knowledge. By implementing this project, I aim to
+enhance my proficiency in Python programming, particularly in handling user input, implementing conditional logic, and managing data structures.
