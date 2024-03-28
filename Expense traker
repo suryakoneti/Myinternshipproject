@@ -1,0 +1,67 @@
+import os
+import json
+from datetime import datetime
+
+class ExpenseTracker:
+    def _init_(self):
+        self.expenses = []  # Initialize expenses attribute
+        self.categories = set()  # Initialize categories attribute
+        self.load_data()  # Load existing data when an instance is created
+
+    def load_data(self):
+        if os.path.exists('expenses.json'):
+            with open('expenses.json', 'r') as file:
+                data = json.load(file)
+                self.expenses = data.get('expenses', [])  # Load expenses data
+                self.categories = set(data.get('categories', []))  # Load categories data
+
+    def save_data(self):
+        data = {
+            'expenses': self.expenses,
+            'categories': list(self.categories)
+        }
+        with open('expenses.json', 'w') as file:
+            json.dump(data, file, indent=4)
+
+    def add_expense(self, amount, description, category):
+        expense = {
+            'date': datetime.now().strftime('%Y-%m-%d'),
+            'amount': amount,
+            'description': description,
+            'category': category
+        }
+        self.expenses.append(expense)  # Add new expense to the list
+        self.categories.add(category)  # Add category to the set
+        self.save_data()  # Save updated data to file
+
+    # Other methods remain the same...
+
+def main():
+    tracker = ExpenseTracker()
+    while True:
+        try:
+            print("\n1. Add Expense")
+            print("2. View Expenses")
+            print("3. View Summary")
+            print("4. Exit")
+            choice = input("Enter your choice: ")
+            if choice == '1':
+                amount = float(input("Enter amount: "))
+                description = input("Enter description: ")
+                category = input("Enter category: ")
+                tracker.add_expense(amount, description, category)
+            elif choice == '2':
+                category = input("Enter category (optional): ")
+                tracker.view_expenses(category)
+            elif choice == '3':
+                tracker.view_summary()
+            elif choice == '4':
+                print("Exiting the program.")
+                break
+            else:
+                print("Invalid choice. Please try again.")
+        except ValueError:
+            print("Invalid input. Please enter a valid amount.")
+
+if _name_ == "_main_":
+    main()
